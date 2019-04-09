@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  iWeather
-//
-//  Created by owner on 4/7/19.
-//  Copyright © 2019 owner. All rights reserved.
-//
-
 import UIKit
 import CoreLocation
 import MapKit

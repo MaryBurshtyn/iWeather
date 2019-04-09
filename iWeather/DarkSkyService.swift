@@ -1,13 +1,6 @@
-//
-//  DarkSkyService.swift
-//  iWeather
-//
-//  Created by owner on 4/8/19.
-//  Copyright © 2019 owner. All rights reserved.
-//
-
 import Foundation
 import Alamofire
+
 public class DarkSkyService {
     
     private static let apiKey = "f766abba0e1a7c5fb77edbccb28e0fa3"

@@ -1,11 +1,3 @@
-//
-//  WeatherData.swift
-//  iWeather
-//
-//  Created by owner on 4/8/19.
-//  Copyright © 2019 owner. All rights reserved.
-//
-
 import Foundation
 import SwiftyJSON
 
