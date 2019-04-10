@@ -1,14 +1,14 @@
 import Foundation
 import SwiftyJSON
 
-struct WeatherData {
+struct CurrentWeatherData {
     
-    var temperature: String
-    var description: String
-    var icon: String
-    var windSpeed: String
-    var windDirection: Int
-    var feellingTemperature: String
+    var temperature: String?
+    var description: String?
+    var icon: String?
+    var windSpeed: String?
+    var windDirection: Int?
+    var feellingTemperature: String?
     
     
     init(data: Any) {
@@ -16,7 +16,7 @@ struct WeatherData {
         let currentWeather = json["currently"]
         
         if let temperature = currentWeather["temperature"].float {
-            self.temperature = String(format: "%.0f", 5 * (temperature - 32)/9) + " ºC"
+            self.temperature = String(format: "%.0f", toCelsius(temperature)) + " ºC"
         } else {
             self.temperature = "--"
         }
@@ -32,11 +32,15 @@ struct WeatherData {
         }
         if let feellingTemperature = currentWeather["apparentTemperature"].float {
             
-            self.feellingTemperature = String(format: "%.0f", 5 * (feellingTemperature - 32)/9 ) + " ºC"
+            self.feellingTemperature = String(format: "%.0f", toCelsius(feellingTemperature)) + " ºC"
         } else {
             self.feellingTemperature = "--"
         }
         self.description = currentWeather["summary"].string ?? "--"
         self.icon = currentWeather["icon"].string ?? "--"
+    }
+    
+    func toCelsius(_ temperature: Float) -> Float{
+      return  5 * (temperature - 32)/9
     }
 }

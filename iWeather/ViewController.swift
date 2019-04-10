@@ -1,28 +1,27 @@
 import UIKit
 import CoreLocation
 import MapKit
-
+//parallax https://www.sitepoint.com/using-uikit-dynamics-swift-animate-apps/
 class ViewController: UIViewController {
 
     @IBOutlet weak var someLabel: UILabel!
-    
-    var addr: String?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        LocationServices.shared.getCityAndCoords { address, latitude, longitude, error in
-            
-            if let a = address, let city = a["City"] as? String {
-                self.someLabel.text = city
-            }
-            DarkSkyService.weatherForCoordinates(latitude: latitude, longitude: longitude) { weatherData, error in
-                if let weatherData = weatherData {
-                    print(weatherData)
+        LocationServices.shared.getCityAndCoords {[weak self] address, latitude, longitude, error in
+            DispatchQueue.main.async {
+                if let a = address, let city = a["City"] as? String {
+                    //self?.someLabel.text = city
                 }
-                else if let _ = error {
-                    self.handleError(message: "Unable to load the forecast for your location.")
+                DarkSkyService.weatherForCoordinates(latitude: latitude, longitude: longitude) { weatherData, error in
+                    if let weatherData = weatherData {
+                        print(weatherData)
+                    }
+                    else if let _ = error {
+                        self?.handleError(message: "Unable to load the forecast for your location.")
+                    }
+                    
                 }
-                
             }
         }
     }
