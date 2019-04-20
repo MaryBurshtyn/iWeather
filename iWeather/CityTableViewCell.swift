@@ -1,11 +1,3 @@
-//
-//  CityTableViewCell.swift
-//  iWeather
-//
-//  Created by owner on 4/19/19.
-//  Copyright © 2019 owner. All rights reserved.
-//
-
 import UIKit
 
 class CityTableViewCell: UITableViewCell {

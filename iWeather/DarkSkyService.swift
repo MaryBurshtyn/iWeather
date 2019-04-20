@@ -18,5 +18,10 @@ public class DarkSkyService {
             }
         }
     }
+    static func handleError(message: String, controller: UIViewController) {
+        let alert = UIAlertController(title: "Error Loading Forecast", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        controller.present(alert, animated: true, completion: nil)
+    }
 }
 //https://gtios.club/weather-part-6/

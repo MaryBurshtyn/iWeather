@@ -6,11 +6,13 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
     
     @IBOutlet weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var collectionView: UICollectionView!
+    var vSpinner : UIView?
     override func viewDidLoad() {
         super.viewDidLoad()
+        showSpinner(onView: self.view)
         collectionViewFlowLayout.itemSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
         collectionView.isPagingEnabled = true
-        //collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CityCollectionViewCell")
+        
         LocationServices.shared.getCityAndCoords {[weak self] address, latitude, longitude, error in
             DispatchQueue.main.async {
                 guard let a = address, let city = a["City"] as? String else {
@@ -19,12 +21,15 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
                 DarkSkyService.weatherForCoordinates(latitude, longitude,city) { weatherData, error in
                     if let weatherData = weatherData {
                         print(weatherData)
-                        DataManager.shared.weatherData.append(weatherData)
-                        DataManager.shared.weatherData.append(weatherData)
+                        self?.removeSpinner()
                         DataManager.shared.weatherData.append(weatherData)
                     }
                     else if let _ = error {
-                        self?.handleError(message: "Unable to load the forecast for your location.")
+                        //self?.handleError(message: "Unable to load the forecast for your location.")
+                        guard let controller = self else {
+                            return
+                        }
+                        DarkSkyService.handleError(message: "Unable to load the forecast for your location.", controller: controller)
                     }
                     self?.collectionView.reloadData()
                 }
@@ -40,6 +45,7 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
         guard let controller = storyboard?.instantiateViewController(withIdentifier: "SavedLocationsViewController") as? SavedLocationsViewController else {
             return
         }
+        controller.delegate = self
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -60,7 +66,10 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.navigationController?.navigationBar.topItem?.title = String(indexPath.row)
+        guard let city = DataManager.shared.weatherData[indexPath.row].city else {
+            return
+        }
+        self.navigationController?.navigationBar.topItem?.title = city
         self.view.reloadInputViews()
     }
    
@@ -73,12 +82,35 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
         view.addSubview(content.view)
         content.didMove(toParentViewController: self)
     }
-    
-    func handleError(message: String) {
-        let alert = UIAlertController(title: "Error Loading Forecast", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+}
+extension ViewController: SavedLocationsViewControllerDelegate {
+    func reloadCollectionOfWeatherData() {
+        let w = DataManager.shared.weatherData
+        print(w)
+        self.collectionView.reloadData()
     }
 }
-
+extension ViewController {
+    func showSpinner(onView : UIView) {
+        let spinnerView = UIView.init(frame: onView.bounds)
+        spinnerView.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        let ai = UIActivityIndicatorView.init(activityIndicatorStyle: .whiteLarge)
+        ai.startAnimating()
+        ai.center = spinnerView.center
+        
+        DispatchQueue.main.async {
+            spinnerView.addSubview(ai)
+            onView.addSubview(spinnerView)
+        }
+        
+        vSpinner = spinnerView
+    }
+    
+    func removeSpinner() {
+        DispatchQueue.main.async {
+            self.vSpinner?.removeFromSuperview()
+            self.vSpinner = nil
+        }
+    }
+}
 

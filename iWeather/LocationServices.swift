@@ -26,9 +26,9 @@ class LocationServices {
             
             geoCoder.reverseGeocodeLocation(self.currentLocation) { placemarks, error in
                 
-                if let e = error {
+                if let occurredError = error {
                     
-                    completion(nil,"","", e)
+                    completion(nil,"","", occurredError)
                     
                 } else {
                     
