@@ -46,7 +46,6 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedItem = matchingItems[indexPath.row].placemark
-        print(selectedItem.coordinate)
         guard let city = selectedItem.name else {
             return
         }
@@ -59,6 +58,8 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
             if let weatherData = weatherData {
                 print(weatherData)
                 DataManager.shared.weatherData.append(weatherData)
+                let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
+                UserDefaults.standard.set(encodedData, forKey: "userLocations")
                 self?.delegate?.reloadSavedLocations()
                 self?.navigationController?.popViewController(animated: true)
             }

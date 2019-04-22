@@ -54,7 +54,8 @@ extension SavedLocationsViewController: UITableViewDelegate, UITableViewDataSour
             return UITableViewCell()
         }
         guard let city = DataManager.shared.weatherData[indexPath.row].city,
-            let temperature = DataManager.shared.weatherData[indexPath.row].currentWeatherData.temperature else {
+            let currentWeatherData = DataManager.shared.weatherData[indexPath.row].currentWeatherData,
+            let temperature = currentWeatherData.temperature else {
             return UITableViewCell()
         }
         cell.setupCell(city, temperature)
