@@ -23,7 +23,12 @@ class AddLocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.navigationController?.navigationBar.isHidden = true
+        guard let bgImage = UIImage(named: "default.jpg") else {
+            return
+        }
+        tableView.backgroundColor = UIColor(white: 1, alpha: 0.0)
+        self.view.backgroundColor = UIColor(patternImage: bgImage)
     }
 }
 extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource  {
@@ -41,6 +46,7 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
             return UITableViewCell()
         }
         cell.setupCell(city)
+        cell.backgroundColor = UIColor(white: 1, alpha: 0.0)
         return cell
     }
     

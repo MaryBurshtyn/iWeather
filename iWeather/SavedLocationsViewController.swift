@@ -5,11 +5,18 @@ protocol SavedLocationsViewControllerDelegate: AnyObject {
 }
 class SavedLocationsViewController: UIViewController {
 
+    @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var savedLocationsTableView: UITableView!
     weak var delegate: SavedLocationsViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        guard let bgImage = UIImage(named: "default.jpg") else {
+            return
+        }
+        titleView.backgroundColor = UIColor(white: 1, alpha: 0.0)
+        self.view.backgroundColor = UIColor(patternImage: bgImage)
+        savedLocationsTableView.backgroundColor = UIColor(white: 1, alpha: 0.0)
+        self.navigationController?.navigationBar.isHidden = true
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleGesture))
         swipeLeft.direction = .left
         self.view.addGestureRecognizer(swipeLeft)
@@ -26,6 +33,12 @@ class SavedLocationsViewController: UIViewController {
         controller.delegate = self
         self.navigationController?.pushViewController(controller, animated: true)
     }
+    @IBAction func backButtonPressed(_ sender: UIButton) {
+        self.delegate?.reloadCollectionOfWeatherData()
+        self.navigationController?.popViewController(animated: true)
+        
+    }
+    
     @objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
         if gesture.direction == UISwipeGestureRecognizerDirection.right {
             print("Swipe Right")
@@ -59,11 +72,19 @@ extension SavedLocationsViewController: UITableViewDelegate, UITableViewDataSour
             return UITableViewCell()
         }
         cell.setupCell(city, temperature)
+        cell.backgroundColor = UIColor(white: 1, alpha: 0.0)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            DataManager.shared.weatherData.remove(at: indexPath.row)
+            self.savedLocationsTableView.deleteRows(at: [indexPath], with: .automatic)
+             self.delegate?.reloadCollectionOfWeatherData()
+        }
     }
 }
 extension SavedLocationsViewController: AddLocationViewControllerDelegate {

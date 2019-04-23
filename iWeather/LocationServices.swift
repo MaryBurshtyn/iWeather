@@ -19,8 +19,9 @@ class LocationServices {
         
         if self.authStatus == inUse || self.authStatus == always {
             
-            self.currentLocation = locManager.location
-             //CLLocation(latitude: 53.9, longitude: 27.56) - Minsk coords
+            //self.currentLocation = locManager.location
+            
+            self.currentLocation = CLLocation(latitude: 53.9, longitude: 27.56)
             
             let geoCoder = CLGeocoder()
             
