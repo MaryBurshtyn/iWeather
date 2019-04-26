@@ -19,13 +19,15 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
         self.view.bringSubview(toFront: menuButton)
         self.navigationController?.navigationBar.isHidden = true
         
-        if let userDefaultsData = UserDefaults.standard.object(forKey: "userLocations") as? Data{
-            
-            if let savedLocations = NSKeyedUnarchiver.unarchiveObject(with: userDefaultsData) as? [RequiredData] {
+        guard let userDefaultsData = UserDefaults.standard.object(forKey: "userLocations") as? Data, let savedLocations = NSKeyedUnarchiver.unarchiveObject(with: userDefaultsData) as? [RequiredData] else {
+            return
+        }
+            if  savedLocations.count != 0 {
 
-                DataManager.shared.weatherData = savedLocations
+               // DataManager.shared.weatherData = savedLocations
                 var index = 0
-                for location in DataManager.shared.weatherData {
+                var updatedWeather:[RequiredData] = []
+                for location in savedLocations {
                     guard let latitude = location.latitude,
                         let longitude = location.longitude,
                         let city = location.city else {
@@ -35,8 +37,11 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
                     DarkSkyService.weatherForCoordinates(latitude, longitude,city) { weatherData, error in
                         if let weatherData = weatherData {
                             print(weatherData)
-                            DataManager.shared.weatherData.insert(weatherData, at: index)
-                            DataManager.shared.weatherData.remove(at: index + 1)
+                            updatedWeather.append(weatherData)
+                            //DataManager.shared.weatherData.insert(weatherData, at: index)
+                            //DataManager.shared.weatherData.remove(at: index + 1)
+                            /*let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
+                            UserDefaults.standard.set(encodedData, forKey: "userLocations")*/
                             index += 1
                         }
                         else if let _ = error {
@@ -45,6 +50,9 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
                         }
                     }
                 }
+                DataManager.shared.weatherData = updatedWeather
+                let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
+                UserDefaults.standard.set(encodedData, forKey: "userLocations")
                 self.collectionView.reloadData()
                 self.removeSpinner()
                 LocationServices.shared.getCityAndCoords {[weak self] address, latitude, longitude, error in
@@ -56,9 +64,15 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
                             DarkSkyService.weatherForCoordinates(latitude, longitude,city) { weatherData, error in
                                 if let weatherData = weatherData {
                                     print(weatherData)
+                                    print(DataManager.shared.weatherData)
                                     DataManager.shared.weatherData.insert(weatherData, at: 0)
+                                    print(DataManager.shared.weatherData)
                                     DataManager.shared.weatherData.remove(at: 1)
+                                    print(DataManager.shared.weatherData)
+                                    let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
+                                    UserDefaults.standard.set(encodedData, forKey: "userLocations")
                                     self?.collectionView.reloadData()
+                                    self?.view.reloadInputViews()
                                 }
                                 else if let _ = error {
                                     //self?.handleError(message: "Unable to load the forecast for your location.")
@@ -71,7 +85,6 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
                     }
                 }
             }
-        }
        else {
             LocationServices.shared.getCityAndCoords {[weak self] address, latitude, longitude, error in
                 DispatchQueue.main.async {
@@ -81,8 +94,8 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
                     DarkSkyService.weatherForCoordinates(latitude, longitude,city) { weatherData, error in
                         if let weatherData = weatherData {
                             print(weatherData)
-                            self?.removeSpinner()
                             DataManager.shared.weatherData.append(weatherData)
+                            self?.removeSpinner()
                             let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
                             UserDefaults.standard.set(encodedData, forKey: "userLocations")
                         }
@@ -195,10 +208,7 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let city = DataManager.shared.weatherData[indexPath.row].city else {
-            return
-        }
-        self.navigationController?.navigationBar.topItem?.title = city
+       
         self.view.reloadInputViews()
     }
    
@@ -217,6 +227,9 @@ extension ViewController: SavedLocationsViewControllerDelegate {
         let w = DataManager.shared.weatherData
         print(w)
         self.collectionView.reloadData()
+    }
+    func displayCity(_ indexPath: IndexPath) {
+        self.collectionView.scrollToItem(at: indexPath, at: [.centeredVertically,   .centeredHorizontally], animated: true)
     }
 }
 extension ViewController {

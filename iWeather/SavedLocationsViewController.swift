@@ -2,6 +2,7 @@ import UIKit
 
 protocol SavedLocationsViewControllerDelegate: AnyObject {
     func reloadCollectionOfWeatherData()
+    func displayCity(_ indexPath: IndexPath)
 }
 class SavedLocationsViewController: UIViewController {
 
@@ -68,23 +69,35 @@ extension SavedLocationsViewController: UITableViewDelegate, UITableViewDataSour
         }
         guard let city = DataManager.shared.weatherData[indexPath.row].city,
             let currentWeatherData = DataManager.shared.weatherData[indexPath.row].currentWeatherData,
-            let temperature = currentWeatherData.temperature else {
+            let temperature = currentWeatherData.temperature,
+            let icon =  currentWeatherData.icon else {
             return UITableViewCell()
         }
-        cell.setupCell(city, temperature)
+        cell.setupCell(city, temperature, icon)
         cell.backgroundColor = UIColor(white: 1, alpha: 0.0)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        guard let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath) else {
+            return
+        }
+        selectedCell.contentView.backgroundColor = UIColor(red:0.45, green:0.60, blue:0.82, alpha:1.0)
+        self.delegate?.displayCity(indexPath)
+        self.delegate?.reloadCollectionOfWeatherData()
+        self.navigationController?.popViewController(animated: true)
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             DataManager.shared.weatherData.remove(at: indexPath.row)
             self.savedLocationsTableView.deleteRows(at: [indexPath], with: .automatic)
-             self.delegate?.reloadCollectionOfWeatherData()
+            let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
+            UserDefaults.standard.set(encodedData, forKey: "userLocations")
+            self.delegate?.reloadCollectionOfWeatherData()
         }
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CGFloat(100)
     }
 }
 extension SavedLocationsViewController: AddLocationViewControllerDelegate {

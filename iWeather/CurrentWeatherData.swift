@@ -9,6 +9,7 @@ class CurrentWeatherData : NSObject, NSCoding {
     var windSpeed: String?
     var windDirection: Int?
     var feellingTemperature: String?
+    var date: String?
 
     init(data: Any) {
         super.init()
@@ -25,6 +26,17 @@ class CurrentWeatherData : NSObject, NSCoding {
         } else {
             self.windSpeed = "--"
         }
+        
+        if let timeInterval = currentWeather["time"].double {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yyyy"
+            let date = Date.init(timeIntervalSince1970: timeInterval)
+            let dateString = dateFormatter.string(from: date)
+            self.date = dateString
+        } else {
+            self.date = "--"
+        }
+        
         if let windDirection = currentWeather["windBearing"].int {
             self.windDirection = windDirection
         } else {

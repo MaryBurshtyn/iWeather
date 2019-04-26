@@ -15,7 +15,7 @@ class RequiredData: NSObject, NSCoding {
         self.city = city
         self.latitude = latitude
         self.longitude = longitude
-        for i in 0...6{
+        for i in 0...5{
             forecastData.append(ForecastData(data: data, index: i))
         }
     }

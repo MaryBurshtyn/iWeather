@@ -27,6 +27,8 @@
 		EB6405F8225A1E5C00B7FB71 /* iWeather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB6405F6225A1E5C00B7FB71 /* iWeather.xcdatamodeld */; };
 		EB6405FD225A1E5D00B7FB71 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB6405FB225A1E5D00B7FB71 /* LaunchScreen.storyboard */; };
 		EB640607225C05C600B7FB71 /* DarkSkyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB640606225C05C600B7FB71 /* DarkSkyService.swift */; };
+		EB9C9EAF2271C8BF008CC2D8 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9C9EAE2271C8BF008CC2D8 /* GraphView.swift */; };
+		EBA9F823227389BE00630A30 /* ForecastCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA9F822227389BE00630A30 /* ForecastCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +56,8 @@
 		EB6405FC225A1E5D00B7FB71 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EB6405FE225A1E5D00B7FB71 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB640606225C05C600B7FB71 /* DarkSkyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkSkyService.swift; sourceTree = "<group>"; };
+		EB9C9EAE2271C8BF008CC2D8 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
+		EBA9F822227389BE00630A30 /* ForecastCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,8 +116,10 @@
 				EB50D0122265DEA900AE8D8F /* AddLocationViewController.swift */,
 				EB50D016226B56BE00AE8D8F /* SavedLocationTableViewCell.swift */,
 				EB61185C225F275900E50A92 /* CityCollectionViewCell.swift */,
+				EB9C9EAE2271C8BF008CC2D8 /* GraphView.swift */,
 				EB50D00C2262203F00AE8D8F /* ChildViewController.swift */,
 				EB50D0142269ADF400AE8D8F /* CityTableViewCell.swift */,
+				EBA9F822227389BE00630A30 /* ForecastCollectionViewCell.swift */,
 				EB611860225F3E9700E50A92 /* DataManager.swift */,
 				EB611856225CA74600E50A92 /* LocationServices.swift */,
 				EB50D0102265040700AE8D8F /* Assets.xcassets */,
@@ -265,6 +271,8 @@
 				EB50D0152269ADF400AE8D8F /* CityTableViewCell.swift in Sources */,
 				EB50D00F2264FFF600AE8D8F /* SavedLocationsViewController.swift in Sources */,
 				EB611857225CA74600E50A92 /* LocationServices.swift in Sources */,
+				EB9C9EAF2271C8BF008CC2D8 /* GraphView.swift in Sources */,
+				EBA9F823227389BE00630A30 /* ForecastCollectionViewCell.swift in Sources */,
 				EB611861225F3E9700E50A92 /* DataManager.swift in Sources */,
 				EB61185D225F275900E50A92 /* CityCollectionViewCell.swift in Sources */,
 				EB6405F0225A1E5C00B7FB71 /* AppDelegate.swift in Sources */,
@@ -415,6 +423,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6H8PGF6K2S;
 				INFOPLIST_FILE = iWeather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -434,6 +443,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6H8PGF6K2S;
 				INFOPLIST_FILE = iWeather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
