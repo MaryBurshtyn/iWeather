@@ -1,11 +1,3 @@
-//
-//  ForecastCollectionViewCell.swift
-//  iWeather
-//
-//  Created by owner on 4/26/19.
-//  Copyright © 2019 owner. All rights reserved.
-//
-
 import UIKit
 
 class ForecastCollectionViewCell: UICollectionViewCell {

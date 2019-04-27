@@ -19,7 +19,7 @@ class LocationServices {
         
         if self.authStatus == inUse || self.authStatus == always {
             
-            //self.currentLocation = locManager.location
+            //self.currentLocation = locManager.location -- here is nil always
             
             self.currentLocation = CLLocation(latitude: 53.9, longitude: 27.56)
             

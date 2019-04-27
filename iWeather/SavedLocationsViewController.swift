@@ -9,6 +9,7 @@ class SavedLocationsViewController: UIViewController {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var savedLocationsTableView: UITableView!
     weak var delegate: SavedLocationsViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let bgImage = UIImage(named: "default.jpg") else {
@@ -22,10 +23,6 @@ class SavedLocationsViewController: UIViewController {
         swipeLeft.direction = .left
         self.view.addGestureRecognizer(swipeLeft)
         
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleGesture))
-        swipeRight.direction = .right
-        self.view.addGestureRecognizer(swipeRight)
-        
     }
     @IBAction func addCityButtonPressed(_ sender: UIButton) {
         guard let controller = storyboard?.instantiateViewController(withIdentifier: "AddLocationViewController") as? AddLocationViewController else {
@@ -34,6 +31,7 @@ class SavedLocationsViewController: UIViewController {
         controller.delegate = self
         self.navigationController?.pushViewController(controller, animated: true)
     }
+    
     @IBAction func backButtonPressed(_ sender: UIButton) {
         self.delegate?.reloadCollectionOfWeatherData()
         self.navigationController?.popViewController(animated: true)
@@ -46,17 +44,9 @@ class SavedLocationsViewController: UIViewController {
             self.delegate?.reloadCollectionOfWeatherData()
             self.navigationController?.popViewController(animated: true)
         }
-        else if gesture.direction == UISwipeGestureRecognizerDirection.left {
-            print("Swipe Left")
-            /*guard let controller = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController else {
-                return
-            }
-            self.delegate?.reloadCollectionOfWeatherData()
-            self.navigationController?.pushViewController(controller, animated: true)*/
-            
-        }
     }
 }
+
 extension SavedLocationsViewController: UITableViewDelegate, UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -100,6 +90,7 @@ extension SavedLocationsViewController: UITableViewDelegate, UITableViewDataSour
         return CGFloat(100)
     }
 }
+
 extension SavedLocationsViewController: AddLocationViewControllerDelegate {
     func reloadSavedLocations() {
         savedLocationsTableView.reloadData()

@@ -58,9 +58,6 @@
                                 <rect key="frame" x="16" y="0.0" width="345" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button" image="menu"/>
-                                <connections>
-                                    <action selector="menuButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1f9-Qd-pHA"/>
-                                </connections>
                             </button>
                         </barButtonItem>
                     </navigationItem>

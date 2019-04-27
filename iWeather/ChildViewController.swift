@@ -39,6 +39,7 @@ class ChildViewController: UIViewController {
     }
     
 }
+
 extension ChildViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let fData = self.forecastData else {

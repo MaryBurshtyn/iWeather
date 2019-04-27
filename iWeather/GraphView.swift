@@ -56,9 +56,6 @@ class GraphView: UIView {
         axisWidth = rect.size.width
         axisHeight = rect.size.height
         
-        // Lets work out the highest value and round to the nearest 25.
-        // This will be used to work out the position of each value
-        // on the Y axis, it essentialy reperesents 100% of Y
         for (index, point) in data.enumerated() {
             let key = Array(data[index].keys)
             guard let currKey = key.first else {

@@ -1,11 +1,3 @@
-//
-//  AddLocationViewController.swift
-//  iWeather
-//
-//  Created by owner on 4/16/19.
-//  Copyright © 2019 owner. All rights reserved.
-//
-
 import UIKit
 import MapKit
 
@@ -31,6 +23,7 @@ class AddLocationViewController: UIViewController {
         self.view.backgroundColor = UIColor(patternImage: bgImage)
     }
 }
+
 extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -76,6 +69,7 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
         
     }
 }
+
 extension AddLocationViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
