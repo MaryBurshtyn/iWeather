@@ -1,12 +1,14 @@
 import UIKit
 import CoreLocation
 import MapKit
+
 typealias JSONDictionary = [String:Any]
 //parallax https://www.sitepoint.com/using-uikit-dynamics-swift-animate-apps/
 class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, CLLocationManagerDelegate {
     
     @IBOutlet weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var collectionView: UICollectionView!
+    
     var menuButton: UIButton = UIButton()
     var vSpinner : UIView?
     var locationManager = CLLocationManager()
@@ -43,7 +45,7 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
                     DispatchQueue.main.async {
                         if let updatedData = weatherData {
                             DataManager.shared.weatherData.append(updatedData)
-                            self.collectionView.reloadData()
+                            //self.collectionView.reloadData()
                             let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
                             UserDefaults.standard.set(encodedData, forKey: "userLocations")
                         }
@@ -84,11 +86,25 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
                 DarkSkyService.weatherForCoordinates(latitude, longitude,city) { weatherData, error in
                     if let weatherData = weatherData {
                         print(weatherData)
-                        DataManager.shared.weatherData.insert(weatherData, at: 0)
-                        self?.removeSpinner()
-                        self?.collectionView.reloadData()
-                        let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
-                        UserDefaults.standard.set(encodedData, forKey: "userLocations")
+                        if DataManager.shared.weatherData.count != 0, DataManager.shared.weatherData[0].city != weatherData.city {
+                            
+                            DataManager.shared.weatherData.insert(weatherData, at: 0)
+                            self?.removeSpinner()
+                            self?.collectionView.reloadData()
+                            let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
+                            UserDefaults.standard.set(encodedData, forKey: "userLocations")
+                        } else {
+                            if DataManager.shared.weatherData.count == 0 {
+                                DataManager.shared.weatherData.append(weatherData)
+                            }else{
+                                DataManager.shared.weatherData.insert(weatherData, at: 0)
+                                DataManager.shared.weatherData.remove(at: 1)
+                            }
+                            self?.removeSpinner()
+                            self?.collectionView.reloadData()
+                            let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
+                            UserDefaults.standard.set(encodedData, forKey: "userLocations")
+                        }
                     }
                     else if let _ = error {
                         guard let controller = self else {
@@ -104,7 +120,7 @@ class ViewController:  UIViewController, UICollectionViewDelegate, UICollectionV
     func getCityAndCoords(completion: @escaping (_ address: JSONDictionary?, _ latitude: String, _ longitude: String,  _ error: Error?) -> ()) {
         self.locationManager.requestWhenInUseAuthorization()
         if  CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse || CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways {
-            self.currentLocation = locationManager.location 
+            self.currentLocation = locationManager.location
             //self.currentLocation = CLLocation(latitude: 53.9, longitude: 27.56)
             let geoCoder = CLGeocoder()
             geoCoder.reverseGeocodeLocation(self.currentLocation) { placemarks, error in

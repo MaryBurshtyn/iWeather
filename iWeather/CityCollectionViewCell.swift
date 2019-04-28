@@ -35,7 +35,8 @@ class CityCollectionViewCell: UICollectionViewCell {
         guard let bgImage = UIImage(named: bgName) else {
             return
         }
-        controller.view.backgroundColor = UIColor(patternImage: bgImage)
+        //controller.view.backgroundColor = UIColor(patternImage: bgImage)
+        controller.imageView.image = bgImage
         var plot : Array<[String: Int]> = []
         var index = 0
         for day in data.forecastData{

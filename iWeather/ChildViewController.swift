@@ -19,12 +19,19 @@ class ChildViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var plotView: UIView!
+    let parallaxOffset = 30
     
+    var imageView : UIImageView!
     var forecastData: [ForecastData]?
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        imageView = UIImageView(frame: CGRect(x: -parallaxOffset, y: -parallaxOffset, width: Int(self.view.frame.width) + (2*parallaxOffset), height: Int(self.view.frame.height) + (2*parallaxOffset)))
+        //imageView.contentMode = .center
+        addParallaxToView(vw: imageView)
+        self.view.addSubview(imageView)
+        self.view.sendSubview(toBack: imageView)
         let itemWidth = self.view.frame.width/7
         collectionViewFlowLayout.itemSize = CGSize(width: itemWidth, height: collectionView.frame.height)
         collectionView.backgroundColor = UIColor(white: 1, alpha: 0.0)
@@ -36,6 +43,21 @@ class ChildViewController: UIViewController {
     }
     func updateForecast() {
         collectionView.reloadData()
+    }
+    func addParallaxToView(vw: UIView) {
+        let amount = parallaxOffset
+        
+        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
+        horizontal.minimumRelativeValue = -amount
+        horizontal.maximumRelativeValue = amount
+        
+        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
+        vertical.minimumRelativeValue = -amount
+        vertical.maximumRelativeValue = amount
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [horizontal, vertical]
+        vw.addMotionEffect(group)
     }
     
 }
