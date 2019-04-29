@@ -1,20 +1,24 @@
 PODS:
   - Alamofire (4.8.2)
+  - InfiniteCarouselCollectionView (0.1.0)
   - SwiftyJSON (4.2.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.0)
+  - InfiniteCarouselCollectionView
   - SwiftyJSON (~> 4.2.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
+    - InfiniteCarouselCollectionView
     - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  InfiniteCarouselCollectionView: da2d58472c7563ef3331718e83f58cb1bf3b9a8d
   SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
 
-PODFILE CHECKSUM: 24b614baac6b7c151a768a34f8b547c91d7dd1e0
+PODFILE CHECKSUM: e52cfe7e19350628302e369c83bcbd178b7455b2
 
 COCOAPODS: 1.6.1

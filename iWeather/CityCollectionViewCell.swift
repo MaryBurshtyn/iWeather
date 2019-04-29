@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import CoreGraphics
+
 let backgroundImages = [
     "clear-day": "clear-day-bg.jpg",
     "clear-night": "clear-night-bg.jpg",
@@ -11,11 +12,11 @@ let backgroundImages = [
     "rain": "rain1-bg.jpg",
     "sleet": "cloudy-day-bg.jpg",
     "snow" : "cloudy-day1-bg.jpg",
-    "wind": "cloudy-day1-bg.jpg",
+    "wind": "cloudy-day1-bg.jpg"
 ]
 class CityCollectionViewCell: UICollectionViewCell {
-    
-    func setUpCell(_ data: RequiredData, _ controller: ChildViewController)  {
+
+    func setUpCell(_ data: WeatherData, _ controller: ChildViewController)  {
         guard let currWeather = data.currentWeatherData, let iconName = currWeather.icon,
         let direction = currWeather.windDirection,  let image = UIImage(named: "dir.png"),
         let temperature = currWeather.temperature, let feelsLike = currWeather.feellingTemperature,
@@ -35,7 +36,6 @@ class CityCollectionViewCell: UICollectionViewCell {
         guard let bgImage = UIImage(named: bgName) else {
             return
         }
-        //controller.view.backgroundColor = UIColor(patternImage: bgImage)
         controller.imageView.image = bgImage
         var plot : Array<[String: Int]> = []
         var index = 0
@@ -51,7 +51,6 @@ class CityCollectionViewCell: UICollectionViewCell {
         let xMargin = controller.view.frame.width/14
         let graph = GraphView(frame: CGRect(x: 0, y: 0, width:  controller.view.frame.width
             , height: 100), data: plot)
-        graph.showLines = false
         graph.xMargin = xMargin
         graph.graphColor = .white
         controller.plotView.addSubview(graph)

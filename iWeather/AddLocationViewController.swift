@@ -6,12 +6,10 @@ protocol AddLocationViewControllerDelegate: AnyObject {
 }
 
 class AddLocationViewController: UIViewController {
-    
-    weak var delegate: AddLocationViewControllerDelegate?
-    var matchingItems: [MKMapItem] = []
-    let locationManager = CLLocationManager()
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    weak var delegate: AddLocationViewControllerDelegate?
+    var matchingItems: [MKMapItem] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +17,6 @@ class AddLocationViewController: UIViewController {
         guard let bgImage = UIImage(named: "default.jpg") else {
             return
         }
-        tableView.backgroundColor = UIColor(white: 1, alpha: 0.0)
         self.view.backgroundColor = UIColor(patternImage: bgImage)
     }
 }
@@ -39,7 +36,6 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
             return UITableViewCell()
         }
         cell.setupCell(city)
-        cell.backgroundColor = UIColor(white: 1, alpha: 0.0)
         return cell
     }
     
@@ -51,22 +47,18 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
         let latitude =  String(selectedItem.coordinate.latitude)
         let longitude =  String(selectedItem.coordinate.longitude)
         DarkSkyService.weatherForCoordinates(latitude, longitude, city) {[weak self] weatherData, error in
-            guard let addLocationController = self else{
+            guard let self = self else{
                     return
             }
             if let weatherData = weatherData {
-                print(weatherData)
-                DataManager.shared.weatherData.append(weatherData)
-                let encodedData = NSKeyedArchiver.archivedData(withRootObject: DataManager.shared.weatherData)
-                UserDefaults.standard.set(encodedData, forKey: "userLocations")
-                self?.delegate?.reloadSavedLocations()
-                self?.navigationController?.popViewController(animated: true)
+                DataManager.shared.save(weatherData: weatherData, operationType: .append, at: 0)
+                self.delegate?.reloadSavedLocations()
+                self.navigationController?.popViewController(animated: true)
             }
             else if let _ = error {
-                DarkSkyService.handleError(message: "Unable to load the forecast for your location.", controller: addLocationController)
+                DarkSkyService.handleError(message: "Unable to load the forecast for your location. Check Internet Connection", controller: self)
             }
         }
-        
     }
 }
 
@@ -86,6 +78,5 @@ extension AddLocationViewController: UISearchBarDelegate {
             self.tableView.reloadData()
         }
     }
-    
 }
 
