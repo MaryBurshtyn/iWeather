@@ -8,7 +8,6 @@ class GraphView: UIView {
     private var data = [[String: Int]]()
     private var context : CGContext?
     
-    private let padding     : CGFloat = 30
     private var graphWidth  : CGFloat = 0
     private var graphHeight : CGFloat = 0
     private var axisWidth   : CGFloat = 0
@@ -48,16 +47,16 @@ class GraphView: UIView {
                 return
             }
             if CGFloat(point[currKey]!) > everest {
-                everest = CGFloat(Int(ceilf(Float(point[currKey]!) / 25) * 25))
+                everest = CGFloat(Int(ceilf(Float(point[currKey]!) / 5) * 5))
             }
         }
         if everest == 0 {
-            everest = 25
+            everest = 5
         }
 
         let pointPath = CGMutablePath()
         let firstPoint = data[0][data[0].keys.first!]
-        let initialY : CGFloat = ceil((CGFloat(firstPoint!) * (axisHeight / everest))) - 10
+        let initialY : CGFloat = ceil((CGFloat(firstPoint!) * (axisHeight / everest)))
         let initialX : CGFloat =  0
         pointPath.move(to: CGPoint(x: initialX, y: graphHeight - initialY))
 
@@ -76,7 +75,7 @@ class GraphView: UIView {
         
         let interval = Int(Int(graphWidth) - (2 * Int(xMargin))) / (data.count - 1)
         let pointValue = point[point.keys.first!]
-        let yposition : CGFloat = ceil((CGFloat(pointValue!) * (axisHeight / everest))) - 10
+        let yposition : CGFloat = ceil((CGFloat(pointValue!) * (axisHeight / everest)))
         var index = 0
         for (ind, value) in data.enumerated() {
             if point.keys.first! == value.keys.first! && point.values.first! == value.values.first! {

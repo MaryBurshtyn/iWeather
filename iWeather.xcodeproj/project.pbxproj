@@ -27,6 +27,7 @@
 		EB9C9EAF2271C8BF008CC2D8 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9C9EAE2271C8BF008CC2D8 /* GraphView.swift */; };
 		EBA9F823227389BE00630A30 /* ForecastCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA9F822227389BE00630A30 /* ForecastCollectionViewCell.swift */; };
 		EBA9F8482276339E00630A30 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA9F8472276339E00630A30 /* WeatherData.swift */; };
+		EBA9F84A2276FF7200630A30 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA9F8492276FF7100630A30 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		EB9C9EAE2271C8BF008CC2D8 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		EBA9F822227389BE00630A30 /* ForecastCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastCollectionViewCell.swift; sourceTree = "<group>"; };
 		EBA9F8472276339E00630A30 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
+		EBA9F8492276FF7100630A30 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 			children = (
 				EB6405EF225A1E5C00B7FB71 /* AppDelegate.swift */,
 				EB6405F1225A1E5C00B7FB71 /* WeatherViewController.swift */,
+				EBA9F8492276FF7100630A30 /* LocationManager.swift */,
 				EB50D00E2264FFF600AE8D8F /* SavedLocationsViewController.swift */,
 				EB50D0122265DEA900AE8D8F /* AddLocationViewController.swift */,
 				EB50D016226B56BE00AE8D8F /* SavedLocationTableViewCell.swift */,
@@ -255,6 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB50D00D2262203F00AE8D8F /* ChildViewController.swift in Sources */,
+				EBA9F84A2276FF7200630A30 /* LocationManager.swift in Sources */,
 				EB6405F8225A1E5C00B7FB71 /* iWeather.xcdatamodeld in Sources */,
 				EB6405F2225A1E5C00B7FB71 /* WeatherViewController.swift in Sources */,
 				EB50D017226B56BE00AE8D8F /* SavedLocationTableViewCell.swift in Sources */,

@@ -1,5 +1,5 @@
 import UIKit
-
+import CoreLocation
 protocol SavedLocationsViewControllerDelegate: AnyObject {
     func reloadCollectionOfWeatherData()
     func displayCity(_ indexPath: IndexPath)
@@ -18,7 +18,6 @@ class SavedLocationsViewController: UIViewController {
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleGesture))
         swipeLeft.direction = .left
         self.view.addGestureRecognizer(swipeLeft)
-        
     }
     
     @IBAction func addCityButtonPressed(_ sender: UIButton) {

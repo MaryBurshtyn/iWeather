@@ -10,17 +10,15 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
     @IBOutlet weak var collectionView: UICollectionView!
     
     private let refreshControl = UIRefreshControl()
-    let pageControl = UIPageControl()
     var menuButton: UIButton = UIButton()
     var vSpinner : UIView?
     var locationManager = CLLocationManager()
     var currentLocation: CLLocation!
+    var currentAuthStatus: CLAuthorizationStatus?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
         setUpCollectionView()
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: .valueChanged)
         refreshControl.tintColor = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
@@ -30,7 +28,6 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
         self.view.addSubview(menuButton)
         self.view.bringSubview(toFront: menuButton)
         self.navigationController?.navigationBar.isHidden = true
-        updateWeather(operationType: .append)
     }
 
     @objc func buttonAction(sender: UIButton!) {
@@ -54,15 +51,16 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
             collectionView.addSubview(refreshControl)
         }
     }
-    
+
     func setUpMenuButton(_ button: UIButton){
-        let size = 50
-        button.frame = UIButton(frame: CGRect(x: 15 , y: 20, width: size, height: size)).frame
+        let size = 40
+        button.frame = UIButton(frame: CGRect(x: 15 , y: 30, width: size, height: size)).frame
         button.setImage(UIImage(named: "menu.png"), for: .normal)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         manager.stopUpdatingLocation()
+        self.currentLocation = locations.last
         getCityAndCoords { [weak self] address, latitude, longitude, error in
             DispatchQueue.main.async {
                 guard let a = address, let city = a["City"] as? String else {
@@ -70,7 +68,6 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
                 }
                 DarkSkyService.weatherForCoordinates(latitude, longitude,city) { weatherData, error in
                     if let weatherData = weatherData {
-                        print(weatherData)
                         if DataManager.shared.count() != 0, DataManager.shared.getItem(at: 0).city != weatherData.city {
                             
                             DataManager.shared.save(weatherData: weatherData, operationType: .insert, at: 0)
@@ -85,6 +82,8 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
                             self?.removeSpinner()
                             self?.collectionView.reloadData()
                         }
+                        self?.collectionView.contentOffset.x = 0
+                        self?.collectionView.reloadData()
                     }
                     else if let _ = error {
                         guard let controller = self else {
@@ -97,10 +96,37 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
         }
     }
     
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if CLLocationManager.authorizationStatus() != CLAuthorizationStatus.authorizedWhenInUse, CLLocationManager.authorizationStatus() != CLAuthorizationStatus.authorizedAlways {
+            guard self.currentAuthStatus != nil else {
+                currentAuthStatus = CLLocationManager.authorizationStatus()
+                manager.requestAlwaysAuthorization()
+                return
+            }
+            self.removeSpinner()
+            let alert = UIAlertController(title: "Couldn't get current location.", message: "Please cange your privacy settings", preferredStyle:  .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction!) -> Void in
+                let savedLocations = DataManager.shared.fetchWeatherData()
+                if savedLocations.count == 0 {
+                    guard let controller = self.storyboard?.instantiateViewController(withIdentifier: "SavedLocationsViewController") as? SavedLocationsViewController else {
+                        return
+                    }
+                    controller.delegate = self
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+                else {
+                    self.updateWeather(operationType: .append)
+                }
+            }))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            updateWeather(operationType: .append)
+            currentAuthStatus = CLLocationManager.authorizationStatus()
+        }
+    }
+    
     func getCityAndCoords(completion: @escaping (_ address: JSONDictionary?, _ latitude: String, _ longitude: String,  _ error: Error?) -> ()) {
-        self.locationManager.requestWhenInUseAuthorization()
         if  CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse || CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways {
-            self.currentLocation = locationManager.location
             let geoCoder = CLGeocoder()
             geoCoder.reverseGeocodeLocation(self.currentLocation) { placemarks, error in
                 if let occurredError = error {
@@ -123,7 +149,13 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
     func updateWeather(operationType: OperationType){
         locationManager.startUpdatingLocation()
         var savedLocations = DataManager.shared.fetchWeatherData()
-        savedLocations.remove(at: 0)
+        if savedLocations.count == 0 {
+            return
+        }
+        if  CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways ||
+            CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse {
+            savedLocations.remove(at: 0)
+        }
         var index = 1
         for location in savedLocations{
             guard let latitude = location.latitude,
@@ -135,19 +167,18 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
                 DispatchQueue.main.async {
                     if let updatedData = weatherData {
                         DataManager.shared.save(weatherData: updatedData, operationType: operationType , at: index)
-                        index += 1
                         if index == DataManager.shared.count() - 1{
                             self.refreshControl.endRefreshing()
+                            self.removeSpinner()
                         }
+                        index += 1
                         self.collectionView.reloadData()
-                        
                     }
                     else if let _ = error {
                         DarkSkyService.handleError(message: "Unable to load the forecast for your location. Check Internet Connection", controller: self)
                     }
                 }
             }
-            
         }
     }
 
