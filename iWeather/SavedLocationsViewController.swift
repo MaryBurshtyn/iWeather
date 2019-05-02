@@ -67,9 +67,11 @@ extension SavedLocationsViewController: UITableViewDelegate, UITableViewDataSour
         guard let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath) else {
             return
         }
+        var newIndexPath = indexPath
+        newIndexPath.row += 1
         selectedCell.contentView.backgroundColor = UIColor(red:0.45, green:0.60, blue:0.82, alpha:1.0)
         self.delegate?.reloadCollectionOfWeatherData()
-        self.delegate?.displayCity(indexPath)
+        self.delegate?.displayCity(newIndexPath)
         self.navigationController?.popViewController(animated: true)
     }
     

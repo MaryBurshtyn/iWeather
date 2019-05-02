@@ -185,6 +185,21 @@ class WeatherViewController:  UIViewController, UICollectionViewDelegate, CLLoca
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.view.reloadInputViews()
     }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if DataManager.shared.count() > 1{
+            if indexPath.row == 0 {
+                var newIndexPath = indexPath
+                newIndexPath.row = DataManager.shared.count()
+                self.collectionView.scrollToItem(at: newIndexPath, at: [.centeredVertically,   .centeredHorizontally], animated: true)
+            }
+            if indexPath.row == DataManager.shared.count() + 1 {
+                var newIndexPath = indexPath
+                newIndexPath.row = 1
+                self.collectionView.scrollToItem(at: newIndexPath, at: [.centeredVertically,   .centeredHorizontally], animated: true)
+            }
+        }
+        
+    }
    
     func display(contentController content: UIViewController, on view: UIView) {
         self.addChildViewController(content)
@@ -227,6 +242,9 @@ extension WeatherViewController {
 }
 extension WeatherViewController: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if DataManager.shared.count() > 1 {
+            return DataManager.shared.count() + 2
+        }
         return DataManager.shared.count()
     }
     
@@ -238,7 +256,17 @@ extension WeatherViewController: UICollectionViewDataSource{
             return UICollectionViewCell()
         }
         display(contentController: viewController, on: cv.contentView)
-        let data = DataManager.shared.getItem(at: indexPath.row)
+        if indexPath.row == 0{
+            let data = DataManager.shared.getItem(at: indexPath.row)
+            cv.setUpCell(data, viewController)
+            return cv
+        }
+        if indexPath.row == DataManager.shared.count() + 1{
+            let data = DataManager.shared.getItem(at: indexPath.row - 2)
+            cv.setUpCell(data, viewController)
+            return cv
+        }
+        let data = DataManager.shared.getItem(at: indexPath.row - 1)
         cv.setUpCell(data, viewController)
         return cv
     }
